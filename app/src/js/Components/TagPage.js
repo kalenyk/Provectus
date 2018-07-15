@@ -25,8 +25,11 @@ export default class TagPage extends React.Component{
         //  this.props.getCloudTag(this.props.match.params.id);//problem:doesn't work with spaces
 
         const idPosition=window.location.href.indexOf(this.props.match.params.id),
-         idWithoutSpaces=window.location.href.slice(idPosition);
-        this.props.getCloudTag(idWithoutSpaces);
+              idWithoutSpaces=window.location.href.slice(idPosition),
+              idWithSpaces = idWithoutSpaces.replace(/%20/g," "),
+              id = btoa(idWithSpaces);
+
+        this.props.getCloudTag(id);
     }
     render(){
         if(this.props.loading){

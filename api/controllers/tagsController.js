@@ -1,6 +1,7 @@
 "use strict";
 
 const mongoose = require("mongoose"),
+    Base64 = require("js-base64").Base64,
     Tag = mongoose.model("Tags");
 
 
@@ -13,11 +14,8 @@ exports.getAllTags = function (req, res) {
 };
 
 exports.getOneTag = function (req, res) {
-    console.log(req.params);
-
-    const id = req.params.id.replace(/%/g," ");
-    console.log(id);
-    Tag.find({id:id}, function (err, tag) {
+   const id = Base64.decode(req.params.id);//problem: spaces change to "%20"
+    Tag.find({id}, function (err, tag) {
         if (err)
             res.send(err);
         res.json(tag[0]);
