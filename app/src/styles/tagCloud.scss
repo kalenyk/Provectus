@@ -1,0 +1,20 @@
+@import "../../node_modules/normalize-scss/sass/normalize";
+
+@include normalize();
+
+.wrap{
+  display: flex;
+  flex-wrap:wrap;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 10px;
+
+}
+
+.item{
+  margin: 0 5px;
+
+  color:darkorange;
+  text-decoration: none;
+}

@@ -1,0 +1,9 @@
+@import "../../node_modules/normalize-scss/sass/normalize";
+
+@include normalize();
+
+.wrap{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}

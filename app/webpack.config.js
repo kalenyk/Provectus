@@ -4,10 +4,10 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     mode: 'development',
-    entry: ["./app/src/js/index.js"],
+    entry: ["./src/js/index.js"],
     output: {
         publicPath: "/",
-        path: path.resolve(__dirname, "public"),
+        path: path.resolve(__dirname, "build"),
         filename: "js/[name].js"
     },
     devServer: {
@@ -61,7 +61,7 @@ module.exports = {
     },
     plugins:[
         new HtmlWebPackPlugin({
-            template: "./app/public/index.html",
+            template: "./public/index.html",
             filename: "./index.html"
         }),
         new ExtractTextPlugin('style.css')

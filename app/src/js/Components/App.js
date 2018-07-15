@@ -1,42 +1,74 @@
 import React from "react";
 import {connect} from "react-redux";
+import {Link} from "react-router-dom";
+
+import Spinner from "./Spinner";
 
 import {getCloudTags} from "../actions/cloudTag";
 
-import tagCloudItem from "../../styles/tagCloudItem.scss";
+import tagCloud from "../../styles/tagCloud.scss";
 
-class App extends React.Component{
-    state={
-        coefficient:null,
-    };
-    componentDidMount(){
-        this.props.getCloudTags();
-    }
-    calcTagDimensions = () => {
-        let a=this.props.cloudTags.map((item)=>item.sentimentScore);
-        const min=Math.min(...a);
-        const max=Math.max(...a);
-        const coefficient = (max-min)/10;
-        console.log(coefficient);
-    };
 
-    render(){
 
-        return(
-            <div className={tagCloudItem.wrap}>
-                {this.props.cloudTags.map((item,index) => {
-                    return <h1  className={tagCloudItem.item} key={index}>{item.label}</h1>
-                })}
-            </div>
-        )
-    }
-}
 const mapStateToProps = (state) => ({
-    cloudTags:state.cloudTags.data
+    cloudTags:state.cloudTags.data,
+    loading:state.cloudTags.loading
 });
 
 const mapDispatchToProps = (dispatch) => ({
     getCloudTags(){dispatch(getCloudTags())}
 });
 
-export default connect(mapStateToProps,mapDispatchToProps)(App);
+
+@connect(mapStateToProps,mapDispatchToProps)
+export default class App extends React.Component{
+    componentDidMount(){
+        this.props.getCloudTags();
+    }
+
+    calcTagDimensions = () => {
+        const a=this.props.cloudTags.map((item)=>item.sentimentScore),
+         min=Math.min(...a),
+         max=Math.max(...a);
+
+         return  (max-min)/100;
+    };
+
+    calcFontSize = (sentimentScore,coefficient) => {
+        if(coefficient){
+            return (sentimentScore/coefficient);
+        }
+        return sentimentScore;
+    };
+
+    randomFontColor = () => {
+        return "#"+((1<<24)*Math.random()|0).toString(16)
+    };
+
+    render(){
+        let coefficient = null;
+        if(this.props.cloudTags.length){
+            coefficient=this.calcTagDimensions();
+        }
+
+        if(this.props.loading){
+            return <Spinner/>
+        }
+        return(
+            <div className={tagCloud.wrap}>
+                {this.props.cloudTags.map((item,index) => {
+                    return <Link
+                        to={`/${item.id}`}
+                        className={tagCloud.item}
+                        style={
+                            {
+                                fontSize:this.calcFontSize(item.sentimentScore,coefficient),
+                                color:this.randomFontColor()
+                            }
+                        }
+                        key={index}>{item.label}</Link>
+                })}
+            </div>
+        )
+    }
+}

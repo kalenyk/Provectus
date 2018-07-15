@@ -14,7 +14,7 @@ ReactDOM.render(<Provider store={store}>
     <ConnectedRouter history={history}>
         <Switch>
             <Route exact path='/' component={App}/>
-            <Route path="/#:id" component={TagPage}/>
+            <Route path="/:id" component={TagPage}/>
         </Switch>
     </ConnectedRouter>
 </Provider>
