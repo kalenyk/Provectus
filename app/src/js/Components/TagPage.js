@@ -22,14 +22,15 @@ const mapDispatchToProps = (dispatch) => ({
 @connect(mapStateToProps,mapDispatchToProps)
 export default class TagPage extends React.Component{
     componentDidMount(){
-        //  this.props.getCloudTag(this.props.match.params.id);//problem:doesn't work with spaces
+        //  this.props.getCloudTag(this.props.match.params.id);//problem:doesn't work with spaces and "/" symbol
 
-        const idPosition=window.location.href.indexOf(this.props.match.params.id),
-              idWithoutSpaces=window.location.href.slice(idPosition),
-              idWithSpaces = idWithoutSpaces.replace(/%20/g," "),
-              id = btoa(idWithSpaces);
+     const idWithoutSpacesPart=this.props.match.params.id.replace(/ /g,"%20"),//get id from url till "/" symbol
+           idPosition=window.location.href.indexOf(idWithoutSpacesPart),//get id position in url
+           fullIdWithoutSpaces=window.location.href.slice(idPosition),//get full id with "/" symbol
+           idWithSpaces=fullIdWithoutSpaces.replace(/%20/g," "),//change "%20" to space in url
+           idBase64 = btoa(idWithSpaces);//encode id in base64
 
-        this.props.getCloudTag(id);
+        this.props.getCloudTag(idBase64);
     }
     render(){
         if(this.props.loading){
